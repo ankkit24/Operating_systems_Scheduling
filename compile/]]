@@ -1,0 +1,88 @@
+#include <proc.h>
+#define EXPDISTSCHED 0
+#define LINUXSCHED 1
+
+
+int stype=0;
+
+void setschedclass(int type){
+	stype = type;
+	//return type;
+}
+
+int getschedclass(){
+	return stype;	
+}
+
+int getnextproc(int random_priority){
+        int this_process;
+        int previous_process;
+
+        this_process = q[rdytail].qprev;
+        previous_process = q[this_process].qprev;
+	//previous_process = q[previous_process].qprev;
+	int send = 0;
+
+	if(random_priority < q[rdytail].qkey){
+		if(random_priority < q[this_process].qkey){
+			if(random_priority < q[previous_process].qkey){
+				send = previous_process;	
+			}
+			send = this_process;
+		}
+		send = this_process.qnext;
+	}
+	
+        /*if(random_priority < q[previous_process].qkey){
+                if(previous_process < NPROC){
+                        if(q[this_process].qkey != q[previous_process].qkey){
+                                this_process = previous_process;
+                        }
+                        previous_process = q[previous_process].qprev;
+                }
+        }*/
+        
+	int flag = 0;
+        if (send == NPROC)
+                flag = 1;
+        else if (send > NPROC)
+                flag = 1;
+        else
+                flag = 0;
+
+        switch(flag){
+                case 0:
+                        return(send);
+                        break;
+                case 1:
+                        return(NULLPROC);
+                        break;
+                default:
+                        return(send);
+                        break;
+        }
+	//return (q[previous_process].qkey);
+}
+
+int getproc(int expdist_proc){
+	
+	int flag = 0;
+	
+	if (expdist_proc < NPROC)
+		flag = 1;
+	else if (expdist_proc > NPROC)
+		flag = 0;
+	else if (expdist_proc = NPROC)
+		flag = 0;
+	else
+		flag = 0;
+
+	switch(flag){
+		case 1:
+			return(dequeue(expdist_proc));
+		case 0:
+			return(EMPTY);
+		default:
+			return(EMPTY);
+	}
+}
